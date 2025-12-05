@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3000;
 const redisClient = new Redis(process.env.REDIS_URL);
 
 
-app.use(helmet());
+// app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
@@ -62,10 +62,10 @@ const proxyOptions = {
 
 
 
-//setting up proxy for our identity service
+//setting up proxy for our user service
 // app.use(
 //   "/v1/auth",
-//   proxy(process.env.IDENTITY_SERVICE_URL, {
+//   proxy(process.env.USER_SERVICE_URL, {
 //     ...proxyOptions,
 //     proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
 //       proxyReqOpts.headers["Content-Type"] = "application/json";
@@ -73,7 +73,7 @@ const proxyOptions = {
 //     },
 //     userResDecorator: (proxyRes, proxyResData, userReq, userRes) => {
 //       logger.info(
-//         `Response received from Identity service: ${proxyRes.statusCode}`
+//         `Response received from User service: ${proxyRes.statusCode}`
 //       );
 
 //       return proxyResData;
