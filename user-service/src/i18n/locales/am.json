@@ -1,0 +1,52 @@
+{
+    "PAGE_NOT_FOUND": "ገጽ አልተገኘም",
+    "INTERNAL_SERVER_ERROR": "አንዳንድ ስህተት ተፈጥሯል፣ እባክዎ ከኋላ ደግሞ ይሞክሩ",
+    "FORBIDDEN_ACCESS": "ክልክል ነው፣ ይህን አገልግሎት ለመጠቀም ፍቃድ የሎትም",
+    "UNAUTHORIZED_NO_TOKEN": "ያልተፈቀደ - ምንም ቶከን አልቀረበም",
+    "INVALID_TOKEN_OR_USER": "ተጠቃሚው አልተገኘም ወይም ቶከኑ ልክ አይደለም",
+    
+    "USER": {
+    "INVALID_OBJECT": "የተሳሳተ ተጠቃሚ ነገር",
+    "CONFLICT_EMAIL": "በ {{email}} ኢሜይል ያለው ተጠቃሚ ከዚህ በፊት አለ",
+    "NOT_FOUND_ID": "የ ID {{id}} ተጠቃሚ አልተገኘም",
+    "NOT_FOUND_EMAIL": "በ {{email}} ኢሜይል ያለው ተጠቃሚ አልተገኘም",
+    "PENDING_APPROVAL": "በ {{email}} ኢሜይል ያለው ተጠቃሚ ከአስተዳዳሪ ጋር እየተፈታ ነው",
+    "INVALID_CREDENTIALS": "የተሳሳተ መረጃ",
+    "CREATED": "አዲስ ተጠቃሚ በተሳካ ሁኔታ ተፈጥሯል",
+    "RETRIEVED_BY_ID": "የ ID {{id}} ተጠቃሚ በተሳካ ሁኔታ ተቀባ",
+    "RETRIEVED_BY_EMAIL": "በ {{email}} ኢሜይል ያለው ተጠቃሚ በተሳካ ሁኔታ ተቀባ",
+    "RETRIEVED_ALL": "አጠቃላይ {{count}} ተጠቃሚዎች በተሳካ ሁኔታ ተቀቡ",
+    "RETRIEVED_NONE": "ምንም ተጠቃሚ አልተገኘም",
+    "UPDATED": "የ ID {{id}} ተጠቃሚ በተሳካ ሁኔታ ተሻሽሏል",
+    "DELETED": "የ ID {{id}} ተጠቃሚ በተሳካ ሁኔታ ተሰርዟል",
+    "FORBIDDEN_ACCESS": "ክልክል ነው፣ ይህን አገልግሎት ለመጠቀም ፍቃድ የሎትም",
+    "OLD_PASSWORD_INCORRECT": "የድሮ የይለፍ ቃልዎ ስህተት ነው ለመለያ {{id}}",
+    "PASSWORD_CHANGED": "የይለፍ ቃል በተሳካ ሁኔታ ተለዋዋጭ ሆነ",
+    "LOGIN_SUCCESS": "በተሳካ ሁኔታ ገብተዋል",
+    "LOGOUT_SUCCESS": "በተሳካ ሁኔታ ወጥተዋል",
+    "NO_TOKEN": "ቶከን አልተሰጠም",
+    "INVALID_TOKEN": "ትክክለኛ ቶከን አይደለም",
+    "NO_USERS_WITH_ROLE": "ተጠቃሚዎች  {{role}} role አልተገኙም፡",
+    "USERS_WITH_ROLE": "በዚህ  {{role}} role ያሉ ተጠቃሚዎች በተሳካ ሁኔታ ተመልሰዋል",
+
+    "VALIDATION": {
+      "FIRST_NAME_REQUIRED": "የመጀመሪያ ስም አስፈላጊ ነው",
+      "LAST_NAME_REQUIRED": "የአያማር ስም አስፈላጊ ነው",
+      "EMAIL_REQUIRED": "ኢሜይል አስፈላጊ ነው",
+      "EMAIL_INVALID": "ኢሜይል የተሳሳተ ነው",
+      "PASSWORD_REQUIRED": "የይለፍ ቃል አስፈላጊ ነው",
+      "PASSWORD_MIN": "የይለፍ ቃል ቢያንስ 6 ቁምፊ መሆን አለበት",
+      "ROLE_REQUIRED": "ሚና አስፈላጊ ነው",
+      "ROLE_INVALID": "ሚና መሆኑ ብቻ ወይም ላይብራሪ መሆን አለበት",
+      "LANGUAGE_REQUIRED": "ቋንቋ አስፈላጊ ነው",
+      "LANGUAGE_INVALID": "ቋንቋ ከ am, en, ar መካከል መሆን አለበት",
+      "OLD_PASSWORD_REQUIRED": "የቀድሞ የይለፍ ቃል አስፈላጊ ነው",
+      "NEW_PASSWORD_REQUIRED": "አዲስ የይለፍ ቃል አስፈላጊ ነው",
+      "NEW_PASSWORD_NOT_SAME": "አዲሱ የይለፍ ቃል ከድሮው የይለፍ ቃል የተለየ መሆን አለበት",
+      "LIBRARIAN_STATUS_REQUIRED": "የቤተ-መፅሀፍት ባለሞያ ሁኔታ አስፈላጊ ነው"
+
+
+    }
+  }
+
+}

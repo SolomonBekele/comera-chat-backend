@@ -5,7 +5,21 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "npx sequelize-cli db:migrate && node src/index.js",
+    "build": "node -c src/index.js",
+    "dev": "nodemon src/index.js",
+    "migrate:init": "npx sequelize-cli init",
+    "migrate:model": "npx sequelize-cli model:generate --name",
+    "migration:generate": "npx sequelize-cli migration:generate --name",
+    "migrate:up": "npx sequelize-cli db:migrate",
+    "migrate:undo": "npx sequelize-cli db:migrate:undo",
+    "migrate:undo:all": "npx sequelize-cli db:migrate:undo:all",
+    "seed:generate": "npx sequelize-cli seed:generate --name",
+    "seed": "npx sequelize-cli db:seed:all",
+    "seed:undo": "npx sequelize-cli db:seed:undo",
+    "seed:undo:all": "npx sequelize-cli db:seed:undo:all",
+    "seed:undo:specific": "npx sequelize-cli db:seed:undo --seed",
+    "migrate:status": "npx sequelize-cli db:migrate:status"
   },
   "author": "",
   "license": "ISC",
@@ -14,17 +28,21 @@
   },
   "dependencies": {
     "argon2": "^0.44.0",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "express-rate-limit": "^8.2.1",
     "helmet": "^8.1.0",
+    "i18n": "^0.15.3",
     "ioredis": "^5.8.2",
     "joi": "^18.0.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^9.0.0",
     "rate-limit-redis": "^4.3.1",
     "rate-limiter-flexible": "^9.0.0",
+    "sequelize": "^6.37.7",
     "winston": "^3.18.3"
   }
 }
