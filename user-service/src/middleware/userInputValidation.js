@@ -4,7 +4,6 @@ const userSignUpScheme = Joi.object({
   email: Joi.string().email().required(),
   password:Joi.string().required(),
   name: Joi.string().min(3).required(),
-  profile_pic:Joi.string()
 });
 export const validateSignUpUser = (req, res, next) => {
   const { error } = userSignUpScheme.validate(req.body);

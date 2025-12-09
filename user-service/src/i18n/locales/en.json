@@ -21,7 +21,7 @@
     "DELETED": "User with ID {{id}} deleted successfully",
     "OLD_PASSWORD_INCORRECT": "Your old password is not correct for id {{id}}",
     "PASSWORD_CHANGED": "Password changed successfully",
-    "LOGIN_SUCCESS": "You are logged in successfully",
+    "LOGIN_SUCCESS": "Logged in successfully!",
     "LOGOUT_SUCCESS": "Logged out successfully",
     "NO_TOKEN": "No token provided",
     "INVALID_TOKEN": "Invalid token",

@@ -4,9 +4,11 @@ import  {
   loginUser,
   refreshTokenUser,
   logoutUser,
+  getAllUsers,
 } from "../controllers/userController.js";
 import { loginLimiterMW } from "../middleware/loginLimiter.js";
 import { validateLoginUser, validateRefreshToken, validateSignUpUser } from "../middleware/userInputValidation.js";
+import protectRoute from "../middleware/protectRoute.js";
 
 const router = express.Router();
 
@@ -14,5 +16,6 @@ router.post("/signup",validateSignUpUser, signupUser);
 router.post("/login",validateLoginUser,loginLimiterMW ,loginUser);
 router.post("/refresh-token",validateRefreshToken, refreshTokenUser);
 router.post("/logout", logoutUser);
+router.get("/",protectRoute,getAllUsers)
 
 export default router;

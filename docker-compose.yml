@@ -17,6 +17,8 @@ services:
         condition: service_healthy
       media-service:
         condition: service_healthy
+    networks:
+      - backend-net
 
   # ===============================
   # USER SERVICE
@@ -35,6 +37,8 @@ services:
       MYSQL_USER: chatuser
       MYSQL_PASSWORD: chatpass
       MYSQL_DB: chat_db
+    networks:
+      - backend-net
 
   # ===============================
   # CHAT SERVICE
@@ -48,6 +52,8 @@ services:
         condition: service_healthy
     environment:
       MONGO_URL: mongodb://root:root123@mongo:27017/chat-db?authSource=admin
+    networks:
+      - backend-net
 
   # ===============================
   # NOTIFICATION SERVICE
@@ -59,6 +65,8 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+    networks:
+      - backend-net
 
   # ===============================
   # MEDIA SERVICE
@@ -75,6 +83,8 @@ services:
       MINIO_ACCESS_KEY: admin
       MINIO_SECRET_KEY: admin12345
       MINIO_BUCKET: uploads
+    networks:
+      - backend-net
 
   # ===============================
   # MONGO DB
@@ -95,18 +105,21 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - backend-net
 
   # ===============================
   # MYSQL
   # ===============================
   mysql:
-    image: mysql:8
+    image: mysql:8.0
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root123
       MYSQL_DATABASE: chat_db
       MYSQL_USER: chatuser
       MYSQL_PASSWORD: chatpass
+      MYSQL_ROOT_HOST: '%'
     ports:
       - "3306:3306"
     volumes:
@@ -116,7 +129,8 @@ services:
       interval: 10s
       retries: 5
       timeout: 5s
-
+    networks:
+      - backend-net
 
   # ===============================
   # REDIS
@@ -134,6 +148,8 @@ services:
       interval: 10s
       timeout: 3s
       retries: 5
+    networks:
+      - backend-net
 
   # ===============================
   # RABBITMQ
@@ -148,6 +164,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    networks:
+      - backend-net
 
   # ===============================
   # MINIO
@@ -160,8 +178,8 @@ services:
       MINIO_ROOT_PASSWORD: admin12345
     command: server /data --console-address ":9001"
     ports:
-      - "9000:9000"   # S3 API
-      - "9001:9001"   # MinIO Console
+      - "9000:9000"
+      - "9001:9001"
     volumes:
       - minio-data:/data
     healthcheck:
@@ -169,6 +187,8 @@ services:
       interval: 30s
       timeout: 20s
       retries: 3
+    networks:
+      - backend-net
 
 # ===============================
 # VOLUMES
@@ -178,3 +198,10 @@ volumes:
   mysql-data:
   redis-data:
   minio-data:
+
+# ===============================
+# NETWORKS
+# ===============================
+networks:
+  backend-net:
+    driver: bridge
