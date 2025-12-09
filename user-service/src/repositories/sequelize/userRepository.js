@@ -1,16 +1,16 @@
 import User from "../sequelize/db/model/userModel.js";
 import { Op } from "sequelize";
 
-export const findByEmail = async (email) => {
+export const findByEmailRepo = async (email) => {
   return User.findOne({ where: { email } });
 };
 
 
-export const findByUsername = async (username) => {
+export const findByUsernameRepo = async (username) => {
   return User.findOne({ where: { username } });
 };
 
-export const findByEmailOrUsername = async (email, username) => {
+export const findByEmailOrUsernameRepo = async (email, username) => {
   return User.findOne({
     where: {
       [Op.or]: [{ email }, { username }]
@@ -18,10 +18,14 @@ export const findByEmailOrUsername = async (email, username) => {
   });
 };
 
-export const createUser = async (data) => {
+export const createUserRepo = async (data) => {
   return User.create(data);
 };
 
-export const findById = async (id) => {
+export const findByIdRepo = async (id) => {
   return User.findByPk(id);
+};
+export const getAllUsersRepo = async () => {
+  const users = await User.findAll();
+  return users.map((u) => u.dataValues);
 };

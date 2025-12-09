@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import 'dotenv/config';
 import logger from "./utils/logger.js";
 import express from "express";
 import helmet from "helmet";
@@ -8,7 +8,6 @@ import errorHandler from "./middleware/errorHandler.js";
 import i18n from './i18n/langConfig.js';
 import { sensitiveEndpointsLimiter } from "./middleware/routeRateLimmiter.js";
 
-dotenv.config();
 
 
 const app = express();
@@ -29,10 +28,10 @@ app.use((req, res, next) => {
 
 
 //apply this sensitiveEndpointsLimiter to our routes
-app.use("/api/auth/register", sensitiveEndpointsLimiter);
+app.use("/api/user/signup",sensitiveEndpointsLimiter);
 
 //Routes
-app.use("/api/auth", routes);
+app.use("/api/user", routes);
 
 //error handler
 app.use(errorHandler);

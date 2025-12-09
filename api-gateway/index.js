@@ -41,12 +41,6 @@ app.use((req, res, next) => {
   logger.info(`Request body, ${req.body}`);
   next();
 });
-app.use((req,res,next) =>{
-  res.status(200).json({
-    message:"hi"
-  })
-
-})
 
 // add proxy optional
 const proxyOptions = {
@@ -64,9 +58,9 @@ const proxyOptions = {
 
 
 
-// setting up proxy for our user service
+// setting up proxy for user service
 app.use(
-  "/v1/auth",
+  "/v1/user",
   proxy(process.env.USER_SERVICE_URL, {
     ...proxyOptions,
     proxyReqOptDecorator: (proxyReqOpts, srcReq) => {

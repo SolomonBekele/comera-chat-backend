@@ -5,7 +5,7 @@ import redisClient from "../config/redisClient.js ";
 const loginLimiter = new RateLimiterRedis({
   storeClient: redisClient,
   keyPrefix: "login_attempt",
-  points: 5,            // 5 attempts
+  points: 20,            // 20 attempts
   duration: 300,        // per 5 minutes
   blockDuration: 900    // block 15 minutes on exceed
 });

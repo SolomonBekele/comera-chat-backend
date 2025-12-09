@@ -3,20 +3,17 @@ import {
   loginUserService,
   refreshUserTokenService,
   logoutUserService,
-  getUserByIdService
+  getUserByIdService,
+  getAllUsersService
 } from "../services/userService.js";
 import i18n from "../i18n/langConfig.js";
 
 import logger from "../utils/logger.js";
+import { data } from "react-router-dom";
 
 export const signupUser = async (req, res) => {
   logger.info("Register endpoint hit...");
   try {
-    
-    if (error) {
-      return res.status(400).json({ success: false, message: error.details[0].message });
-    }
-
     await signupUserService(req.body);
 
     res.status(201).json({
@@ -25,7 +22,7 @@ export const signupUser = async (req, res) => {
     });
 
   } catch (e) {
-    logger.error(`Signup error for email=${email}: ${e.message}`, { stack: e.stack });
+    logger.error(`Signup error for email=${req.body.email}: ${e.message}`, { stack: e.stack });
     res.status(400).json({ success: false, message: i18n.__("INTERNAL_SERVER_ERROR") });
   }
 };
@@ -35,16 +32,18 @@ export const loginUser = async (req, res) => {
   try {
 
     const result = await loginUserService(req.body,req.ip);
-
+    const {password,...userWithOutPassword}= result.user;
     res.json({
          success: true, 
          message: i18n.__("USER.LOGIN_SUCCESS"),
-          ...result 
+         data: userWithOutPassword,
+         token:result.token,
+         refreshTokenUser:result.refreshToken
         });
 
   } catch (e) {
-    logger.error(`Login error for ${req.body.email}: ${error.message}`, { stack: error.stack });
-    res.status(400).json({ success: false, message: i18n.__("INTERNAL_SERVER_ERROR") });
+    logger.error(`Login error for ${req.body.email}: ${e.message}`, { stack: e.stack });
+    res.status(400).json({ success: false, message: e.message });
   }
 };
 
@@ -95,5 +94,25 @@ export const getUserbyId = async (req, res) => {
   } catch (e) {
     logger.error(`Login error for ${req.body.email}: ${error.message}`, { stack: error.stack });
     res.status(400).json({ success: false, message: i18n.__("INTERNAL_SERVER_ERROR") });
+  }
+};
+export const getAllUsers = async (req, res) => {
+  logger.info("get all user  endpoint hit...");
+  try {
+    const id = req.params.id;
+    const result = await getAllUsersService();
+
+    res.json({
+         success: true, 
+         message: i18n.__("USER.RETRIEVED_ALL",{count:result.length}),
+          result 
+        });
+
+  } catch (err) {
+    logger.error("Error fetching all users", { message: err.message, stack: err.stack });
+        res.status(500).json({
+            success: false,
+            message: i18n.__("INTERNAL_SERVER_ERROR"),
+        });
   }
 };
