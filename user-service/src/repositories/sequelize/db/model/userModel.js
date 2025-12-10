@@ -3,10 +3,10 @@ import sequelize from "../../config/sequelize.js";
 
 const User = sequelize.define('User', {
   id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
+  type: DataTypes.UUID,
+  defaultValue: DataTypes.UUIDV4,
+  primaryKey: true,
+   },
   phone_number: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -23,7 +23,6 @@ const User = sequelize.define('User', {
   username: {
     type: DataTypes.STRING,
     allowNull: true,
-    unique: true,
   },
   password: DataTypes.STRING,
   name: {

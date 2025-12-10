@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
-import { getUserByIdService } from "../services/userService.js";
+
 import i18n from "../i18n/langConfig.js";
 import logger from "../utils/logger.js";
+import { getUserByIdService } from "../services/userService.js";
 
 
 const protectRoute = async (req, res, next) => {
@@ -32,8 +33,8 @@ const protectRoute = async (req, res, next) => {
     next();
 
   } catch (error) {
-    logger.error("Error in protectRoute middleware", { message: error.message, stack: error.stack });
-    res.status(400).json({ success: false, message: i18n.__("INTERNAL_SERVER_ERROR") });
+    logger.error(`Error in protectRoute middleware: ${error.message}\n${error.stack}`);
+    res.status(400).json({ success: false, message: i18n.__("INTERNAL_SERVER_ERROR")});
   }
 };
 
