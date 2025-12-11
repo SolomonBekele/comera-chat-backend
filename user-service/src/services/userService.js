@@ -35,20 +35,14 @@ export const getAllUsersService = async ()=>{
         
 }
 export const updateUserService = async (id,data) => {
-  const { phoneNumber,fullName} = data;
-
-//   const emailExist = await findByEmailRepo(email);
-//   if (emailExist){
-//     logger.warn(`Signup failed: email already exists -> ${email}`);
-//     throw new Error(i18n.__("USER.CONFLICT_EMAIL", { email }));
-//   } 
+  const { phoneNumber,fullName,status} = data;
+  const user = await findByIdRepo(id)
   const phoneNoExist = await findByPhoneRepo(phoneNumber);
-  if (phoneNoExist){
+  if (user?.phone_number != phoneNumber && phoneNoExist){
     logger.warn(`user update failed: phone number already exists -> ${phoneNumber}`);
     throw new Error(i18n.__("USER.CONFLICT_PHONE_NUMBER", { phoneNumber }));
   } 
-  const user = await updateUserRepo(id,phoneNumber,fullName);
-  console.log(user);
-  const {password,...userWithoutPassword} = user;
+  const updatedUser = await updateUserRepo(id,phoneNumber,fullName,status);
+  const {password,...userWithoutPassword} = updatedUser;
   return userWithoutPassword;
 };

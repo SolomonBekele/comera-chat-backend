@@ -20,8 +20,8 @@ sequelize = new Sequelize(
     logger.info(" Sequelize Database connection established successfully.");
 
     // Sync all models
-    await sequelize.sync(); 
-    logger.info("All tables synced successfully.");
+    // await sequelize.sync(); 
+    // logger.info("All tables synced successfully.");
 
   } catch (error) {
     logger.error("Database sync error", { stack: error.stack });

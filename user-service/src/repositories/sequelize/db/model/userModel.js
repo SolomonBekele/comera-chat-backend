@@ -1,3 +1,4 @@
+
 import { DataTypes } from 'sequelize';
 import sequelize from "../../config/sequelize.js";
 
@@ -34,8 +35,8 @@ const User = sequelize.define('User', {
     allowNull: true,
   },
   status: {
-    type: DataTypes.ENUM('ACTIVE', 'INACTIVE', 'BANNED'),
-    defaultValue: 'ACTIVE',
+    type: DataTypes.ENUM('AVAILABLE', 'BUZY', 'DO_NOT_DISTURB','BE_RIGHT_BACK'),
+    defaultValue: 'AVAILABLE',
   },
   last_seen: {
     type: DataTypes.DATE,
