@@ -34,7 +34,7 @@ export const loginUser = async (req, res) => {
     res.json({
          success: true, 
          message: i18n.__("USER.LOGIN_SUCCESS"),
-         data: userWithOutPassword,
+         user: userWithOutPassword,
          token:result.token,
          refreshToken:result.refreshToken
         });

@@ -1,7 +1,8 @@
 import {
   getUserByIdService,
   getAllUsersService,
-  updateUserService
+  updateUserService,
+  updateProfilePicService
 } from "../services/userService.js";
 import i18n from "../i18n/langConfig.js";
 import logger from "../utils/logger.js";
@@ -68,6 +69,21 @@ export const updateUser = async (req,res,next) =>{
          success: true, 
          message: i18n.__("USER.UPDATED_"),
          user 
+        });
+
+  } catch (error) {
+    logger.error(`Login error for ${req.body.email}: ${error.message}`, { stack: error.stack });
+    res.status(400).json({ success: false, message: error.message });
+  }
+}
+export const updateProfilePic = async (req,res,next) =>{
+    try{
+        const id = req.user.id;
+        const imageUrl = await updateProfilePicService(id,req.file);
+        res.json({
+         success: true, 
+         message: i18n.__("USER.UPDATED_PROFILE"),
+         imageUrl
         });
 
   } catch (error) {

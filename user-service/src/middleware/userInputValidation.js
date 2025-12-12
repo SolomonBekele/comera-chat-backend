@@ -55,3 +55,38 @@ export const validateUpdateUser = (req, res, next) => {
     });
   next();
 };
+
+
+
+// Validate uploaded profile picture
+const profilePicUpdateScheme = Joi.object({
+  // Expecting a file object with mimetype and size
+  mimetype: Joi.string()
+    .valid("image/jpeg", "image/png", "image/jpg", "image/gif")
+    .required()
+    .messages({
+      "any.only": "Only JPG, JPEG, PNG, or GIF images are allowed",
+      "any.required": "Profile picture is required",
+    }),
+  size: Joi.number()
+    .max(5 * 1024 * 1024) // max 5 MB
+    .messages({
+      "number.max": "Profile picture must be less than 5 MB",
+    }),
+});
+
+export const validateProfilePicUpdate = (req, res, next) => {
+ 
+  const { error } = profilePicUpdateScheme.validate(req.file, { 
+    abortEarly: true,
+    allowUnknown:true
+  });
+
+  if (error)
+    return res.status(400).json({
+      status: 400,
+      message: error.details[0].message,
+    });
+
+  next();
+};

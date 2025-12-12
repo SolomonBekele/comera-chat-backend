@@ -3,11 +3,13 @@ import {
   findByIdRepo,
   findByPhoneRepo,
   getAllUsersRepo,
+  updateProfilePicRepo,
   updateUserRepo,
 } from "../repositories/sequelize/userRepository.js";
 import logger from "../utils/logger.js";
 import { v4 as uuidv4 } from 'uuid';
 import i18n from "../i18n/langConfig.js";
+import { uploadProfilePic } from "../utils/uploadImage.js";
 
 export const getUserByIdService = async (id)=>{
   const user = await findByIdRepo(id);
@@ -35,20 +37,24 @@ export const getAllUsersService = async ()=>{
         
 }
 export const updateUserService = async (id,data) => {
-  const { phoneNumber,fullName} = data;
-
-//   const emailExist = await findByEmailRepo(email);
-//   if (emailExist){
-//     logger.warn(`Signup failed: email already exists -> ${email}`);
-//     throw new Error(i18n.__("USER.CONFLICT_EMAIL", { email }));
-//   } 
+  const { phoneNumber,fullName,status} = data;
+  const user = await findByIdRepo(id)
   const phoneNoExist = await findByPhoneRepo(phoneNumber);
-  if (phoneNoExist){
+  if (user?.phone_number != phoneNumber && phoneNoExist){
     logger.warn(`user update failed: phone number already exists -> ${phoneNumber}`);
     throw new Error(i18n.__("USER.CONFLICT_PHONE_NUMBER", { phoneNumber }));
   } 
-  const user = await updateUserRepo(id,phoneNumber,fullName);
-  console.log(user);
-  const {password,...userWithoutPassword} = user;
+  const updatedUser = await updateUserRepo(id,phoneNumber,fullName,status);
+  const {password,...userWithoutPassword} = updatedUser;
   return userWithoutPassword;
 };
+
+export const updateProfilePicService = async (id,file) => {
+  
+  const image_url = await uploadProfilePic(file.buffer,file.originalname)
+  
+  const imageUrl = await updateProfilePicRepo(id,image_url);
+  
+  return imageUrl;
+};
+

@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import Redis from 'ioredis';
 import helmet from 'helmet';
 import logger from './src/utils/logger.js';       
 import proxy from 'express-http-proxy';
@@ -12,12 +11,16 @@ import { gatewayRateMiddleware } from './src/middleware/gatewayLimiter.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const redisClient = new Redis(process.env.REDIS_URL);
 
 
 app.use(helmet());
 app.use(cors());
-app.use(express.json());
+app.use((req, res, next) => {
+  if (req.headers['content-type']?.includes('multipart/form-data')) {
+    return next(); // skip express.json()
+  }
+  return express.json({ limit: '50mb' })(req, res, next);
+});
 
 
 // ======================
@@ -64,9 +67,18 @@ app.use(
   proxy(process.env.USER_SERVICE_URL, {
     ...proxyOptions,
     proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
-      proxyReqOpts.headers["Content-Type"] = "application/json";
-      return proxyReqOpts;
-    },
+  const contentType = srcReq.headers["content-type"];
+
+  // 🚫 DO NOT set manually for multipart/form-data
+  if (contentType?.includes("multipart/form-data")) {
+    return proxyReqOpts; // keep original header WITH boundary
+  }
+
+  // Only set JSON for regular requests
+  proxyReqOpts.headers["Content-Type"] = "application/json";
+  return proxyReqOpts;
+}
+,
     userResDecorator: (proxyRes, proxyResData, userReq, userRes) => {
       logger.info(
         `Response received from User service: ${proxyRes.statusCode}`

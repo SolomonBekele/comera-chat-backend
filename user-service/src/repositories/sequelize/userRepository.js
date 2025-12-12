@@ -6,7 +6,6 @@ export const findByEmailRepo = async (email) => {
   return user ? user.dataValues : null;
 };
 export const findByPhoneRepo = async (phone_number) => {
-  console.log(phone_number);
   const user =await  User.findOne({ where: { phone_number } });
   return user ? user.dataValues : null;
 };
@@ -28,7 +27,6 @@ export const findByEmailOrUsernameRepo = async (email, username) => {
 
 export const createUserRepo = async (data) => {
   const created_user= await User.create(data);
-  console.log(created_user);
   return created_user ? created_user.dataValues :null;
 };
 
@@ -40,11 +38,19 @@ export const getAllUsersRepo = async () => {
   const users = await User.findAll();
   return users.map((u) => u.dataValues);
 };
-export const updateUserRepo = async (id,phone_number,name) => {
+export const updateUserRepo = async (id,phone_number,name,status) => {
   const user = await User.findByPk(id);
   if (!user) return null;
   user.name = name;
   user.phone_number = phone_number;
+  user.status = status;
   await user.save();
   return user.dataValues;
+};
+export const updateProfilePicRepo = async (id,image_url) => {
+  const user = await User.findByPk(id);
+  if (!user) return null;
+  user.profile_picture = image_url;
+  await user.save();
+  return user.dataValues.profile_picture;
 };
