@@ -9,7 +9,7 @@ import {
 import logger from "../utils/logger.js";
 import { v4 as uuidv4 } from 'uuid';
 import i18n from "../i18n/langConfig.js";
-import { uploadProfilePic } from "../utils/uploadImage.js";
+import { uploadProfilePic,getPresignedUrl } from "../utils/storageHandler.js";
 
 export const getUserByIdService = async (id)=>{
   const user = await findByIdRepo(id);
@@ -50,11 +50,19 @@ export const updateUserService = async (id,data) => {
 };
 
 export const updateProfilePicService = async (id,file) => {
+
+  const fileName = await uploadProfilePic(file.buffer,file.originalname)
   
-  const image_url = await uploadProfilePic(file.buffer,file.originalname)
+  await updateProfilePicRepo(id,fileName);
   
-  const imageUrl = await updateProfilePicRepo(id,image_url);
-  
-  return imageUrl;
+  return fileName;
 };
+export const getProfilePicService = async (fileName) => {
+  
+  const presigned = await getPresignedUrl(fileName)
+  
+  
+  return presigned;
+};
+
 

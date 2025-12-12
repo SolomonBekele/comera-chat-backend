@@ -47,10 +47,9 @@ export const updateUserRepo = async (id,phone_number,name,status) => {
   await user.save();
   return user.dataValues;
 };
-export const updateProfilePicRepo = async (id,image_url) => {
+export const updateProfilePicRepo = async (id,fileName) => {
   const user = await User.findByPk(id);
   if (!user) return null;
-  user.profile_picture = image_url;
+  user.profile_picture = fileName;
   await user.save();
-  return user.dataValues.profile_picture;
 };
