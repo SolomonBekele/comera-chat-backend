@@ -3,11 +3,13 @@ import {
   findByIdRepo,
   findByPhoneRepo,
   getAllUsersRepo,
+  updateProfilePicRepo,
   updateUserRepo,
 } from "../repositories/sequelize/userRepository.js";
 import logger from "../utils/logger.js";
 import { v4 as uuidv4 } from 'uuid';
 import i18n from "../i18n/langConfig.js";
+import { uploadProfilePic } from "../utils/uploadImage.js";
 
 export const getUserByIdService = async (id)=>{
   const user = await findByIdRepo(id);
@@ -46,3 +48,13 @@ export const updateUserService = async (id,data) => {
   const {password,...userWithoutPassword} = updatedUser;
   return userWithoutPassword;
 };
+
+export const updateProfilePicService = async (id,file) => {
+  
+  const image_url = await uploadProfilePic(file.buffer,file.originalname)
+  
+  const imageUrl = await updateProfilePicRepo(id,image_url);
+  
+  return imageUrl;
+};
+
