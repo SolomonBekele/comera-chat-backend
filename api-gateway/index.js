@@ -41,7 +41,7 @@ app.use(
 
 app.use((req, res, next) => {
   logger.info(`Received ${req.method} request to ${req.url}`);
-  logger.info(`Request body, ${req.body}`);
+ 
   next();
 });
 
@@ -68,9 +68,9 @@ app.use(
     ...proxyOptions,
     proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
   const contentType = srcReq.headers["content-type"];
-
   // 🚫 DO NOT set manually for multipart/form-data
   if (contentType?.includes("multipart/form-data")) {
+   
     return proxyReqOpts; // keep original header WITH boundary
   }
 
