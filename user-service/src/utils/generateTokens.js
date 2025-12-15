@@ -1,9 +1,13 @@
 import jwt from "jsonwebtoken";
+import { storeUserToken } from "./storeToken.js";
 
-export const  generateAccessToken = (userId,language) => {
-  return jwt.sign({ userId,language }, process.env.JWT_SECRET, {
+
+export const  generateAccessToken = async (userId,language) => {
+  const token = jwt.sign({ userId,language }, process.env.JWT_SECRET, {
     expiresIn: "15m",
   });
+  await storeUserToken(userId,token);
+  return token;
 };
 
 export const generateRefreshToken = (userId,language) => {

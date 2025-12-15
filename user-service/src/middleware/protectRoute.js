@@ -1,4 +1,6 @@
 import jwt from "jsonwebtoken";
+import redisClient from "../../../common/config/redisClient.js";
+
 
 import i18n from "../i18n/langConfig.js";
 import logger from "../utils/logger.js";
@@ -8,13 +10,20 @@ import { getUserByIdService } from "../services/userService.js";
 const protectRoute = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
-
     if (!token || token === "null") {
       logger.warn("Unauthorized access attempt: No token provided");
       return res.status(401).json({ error: i18n.__("UNAUTHORIZED_NO_TOKEN") });
     }
-
+ 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+   
+    // Get stored token from Redis
+    const storedToken = await redisClient.get(decoded.userId);
+
+    if (!storedToken || storedToken !== token) {
+      return res.status(401).json({ message: "Invalid or expired token", success: false });
+    }
+  // additional
     const user = await getUserByIdService(decoded.userId);
 
     if (!user) {

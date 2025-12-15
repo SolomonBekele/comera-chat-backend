@@ -1,5 +1,5 @@
 import { Client } from "minio";
-console.log(process.env.MINIO_ACCESS_KEY);
+
 export const minioClient = new Client({
   endPoint: process.env.MINIO_HOST,
   port: Number(process.env.MINIO_PORT),

@@ -1,0 +1,12 @@
+{
+  "PAGE_NOT_FOUND":"Page not found",
+  "INTERNAL_SERVER_ERROR": "Something went wrong, please try again later.",
+  "FORBIDDEN_ACCESS": "Forbidden, you are not allowed to access this service",
+  "UNAUTHORIZED_NO_TOKEN": "Unauthorized - No token provided",
+  "INVALID_TOKEN_OR_USER": "User not found or invalid token",
+
+  "MONGO":{
+  "MONGO_CONNECTED": "Connected to MongoDB",
+  "MONGO_FAILED": "Error connecting to MongoDB"
+  }
+}

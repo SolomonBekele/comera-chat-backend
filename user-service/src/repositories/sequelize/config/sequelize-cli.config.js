@@ -4,10 +4,10 @@ dotenv.config();
 export default {
   development: {
     username: process.env.MYSQL_ROOT_USER ,
-    password: process.env.MYSQL_ROOT_PASSWORD || "root",
-    database: process.env.MYSQL_DB || "user_db",
-    host: process.env.MYSQL_HOST || "localhost",
-    port: process.env.MYSQL_PORT || 3306,
+    password: process.env.MYSQL_ROOT_PASSWORD ,
+    database: process.env.MYSQL_DB 
+    host: process.env.MYSQL_HOST 
+    port: process.env.MYSQL_PORT 
     dialect: "mysql",
   },
  test: {
