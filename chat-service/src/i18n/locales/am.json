@@ -1,0 +1,12 @@
+{
+  "PAGE_NOT_FOUND": "ገጽ አልተገኘም",
+  "INTERNAL_SERVER_ERROR": "አንዳንድ ስህተት ተፈጥሯል፣ እባክዎ ከኋላ ደግሞ ይሞክሩ",
+  "FORBIDDEN_ACCESS": "ክልክል ነው፣ ይህን አገልግሎት ለመጠቀም ፍቃድ የሎትም",
+  "UNAUTHORIZED_NO_TOKEN": "ያልተፈቀደ - ምንም ቶከን አልቀረበም",
+  "INVALID_TOKEN_OR_USER": "ተጠቃሚው አልተገኘም ወይም ቶከኑ ልክ አይደለም",
+
+  "MONGO": {
+    "MONGO_CONNECTED": "MongoDB ጋር ተገናኝቷል",
+    "MONGO_FAILED": "ከ MongoDB ጋር መገናኘት አልተሳካም"
+  }
+}

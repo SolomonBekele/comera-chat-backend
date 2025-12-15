@@ -7,6 +7,8 @@ import {
 import i18n from "../i18n/langConfig.js";
 
 import logger from "../utils/logger.js";
+import { verify } from "crypto";
+import { verifyToken } from "../utils/generateTokens.js";
 
 
 export const signupUser = async (req, res) => {
@@ -30,6 +32,7 @@ export const loginUser = async (req, res) => {
   try {
 
     const result = await loginUserService(req.body,req.ip);
+
     const {password,...userWithOutPassword}= result.user;
     res.json({
          success: true, 
@@ -62,13 +65,11 @@ export const refreshTokenUser = async (req, res) => {
 export const logoutUser = async (req, res) => {
   logger.info("Logout endpoint hit...");
   try {
-    const { refreshToken } = req.body;
+    const token = req.headers.authorization?.split(" ")[1];
+ 
+    const decode = verifyToken(token,process.env.process.env.JWT_SECRET)
 
-    if (!refreshToken) {
-      return res.status(400).json({ success: false, message: "Refresh token missing" });
-    }
-
-    await logoutUserService(refreshToken);
+    await logoutUserService(decode.userId)
 
     res.json({ success: true, message: "Logged out successfully" });
 

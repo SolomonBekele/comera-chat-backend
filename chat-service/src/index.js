@@ -3,12 +3,11 @@ import logger from "./utils/logger.js";
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
-import authRoutes from "./routes/authRoutes.js";
-import userRoutes from "./routes/userRoutes.js"
+import messageRoutes from "./routes/messageRoutes.js";
 import errorHandler from "./middleware/errorHandler.js";
 import i18n from './i18n/langConfig.js';
-import { sensitiveEndpointsLimiter } from "./middleware/routeRateLimmiter.js";
-import protectRoute from './middleware/protectRoute.js';
+import { authenticateRequest } from './middleware/authMiddleware.js';
+
 
 
 
@@ -29,16 +28,18 @@ app.use((req, res, next) => {
 
 
 
-//Routes
-app.use("/api/user/auth", authRoutes);
-app.use("/api/user/profile",protectRoute,userRoutes);
+
+
+
+app.use("/api/chat/message",authenticateRequest, messageRoutes);
+// app.use("/api/user/profile",protectRoute,userRoutes);
 
 
 //error handler
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  logger.info(`User service running on port ${PORT}`);
+  logger.info(`Chat service running on port ${PORT}`);
 });
 
 //unhandled promise rejection

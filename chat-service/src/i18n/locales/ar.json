@@ -1,0 +1,12 @@
+{
+  "PAGE_NOT_FOUND": "الصفحة غير موجودة",
+  "INTERNAL_SERVER_ERROR": "حدث خطأ ما، يرجى المحاولة مرة أخرى لاحقًا",
+  "FORBIDDEN_ACCESS": "ممنوع، ليس لديك صلاحية للوصول إلى هذه الخدمة",
+  "UNAUTHORIZED_NO_TOKEN": "غير مصرح - لم يتم تقديم رمز",
+  "INVALID_TOKEN_OR_USER": "المستخدم غير موجود أو الرمز غير صالح",
+
+  "MONGO": {
+    "MONGO_CONNECTED": "تم الاتصال بـ MongoDB",
+    "MONGO_FAILED": "فشل الاتصال بـ MongoDB"
+  }
+}

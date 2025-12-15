@@ -10,6 +10,7 @@ import i18n from "../i18n/langConfig.js";
 import bcrypt from "bcrypt";
 import { penalizeLogin, resetLogin } from "../middleware/loginLimiter.js";
 import { generateAccessToken,generateRefreshToken,verifyToken } from "../utils/generateTokens.js";
+import redisClient from "../../../common/config/redisClient.js";
 
 
 export const signupUserService = async (data) => {
@@ -51,8 +52,9 @@ export const loginUserService = async (data,ip) => {
     throw new Error(i18n.__("USER.INVALID_CREDENTIALS"));
   }
   
-  const token = generateAccessToken(user.id,user.language);
-  const refreshToken = generateRefreshToken(user.id, user.language);
+  const token = await generateAccessToken(user.id,user.language);
+  
+  const refreshToken =  generateRefreshToken(user.id, user.language);
   await resetLogin(ip);
   return {user,token,refreshToken};
 };
@@ -64,7 +66,6 @@ export const refreshUserTokenService = async (refreshToken) => {
     logger.warn("Refresh failed: invalid token");
     throw new Error(i18n.__("USER.INVALID_TOKEN") );
   }
-  console.log(stored);
   const user = await findByIdRepo(stored.userId);
   if (!user) throw new Error("User not found");
 
@@ -74,10 +75,8 @@ export const refreshUserTokenService = async (refreshToken) => {
   return newAccessToken;
 };
 
-export const logoutUserService = async (refreshToken) => {
-  // const removed = await deleteByToken(refreshToken);
-  // if (!removed) throw new Error("Invalid refresh token");
-
+export const logoutUserService = async (userId) => {
+   await redisClient.del(userId);
   return true;
 };
 
