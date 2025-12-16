@@ -1,23 +1,13 @@
 import { Message } from "./models/messageModel.js";
 
 /* Send message */
-export const sendMessageRepo = ({
-  conversationId,
-  senderId,
-  type = "text",
-  content,
-  mediaUrl,
-  replyToMessageId,
-}) => {
-  return Message.create({
-    conversation_id: conversationId,
-    sender_id: senderId,
-    type,
-    content,
-    media_url: mediaUrl,
-    reply_to_message_id: replyToMessageId,
-  });
+export const createMessageRepo = (payload, session) => {
+  return Message.create(
+    [payload],
+    { session }
+  ).then(res => res[0]);
 };
+
 
 /* Get message by ID */
 export const getMessageByIdRepo = (messageId) => {

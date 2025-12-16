@@ -3,7 +3,7 @@ const conversationSchema = new mongoose.Schema(
   {
     type: {
       type: String,
-      enum: ["one_on_one", "group"],
+      enum: ["one-to-one", "group"],
       required: true,
     },
 

@@ -1,8 +1,11 @@
 import { Conversation } from "./models/conversationModel.js";
 
 /* Create conversation */
-export const createConversationRepo = (type = "one_on_one",name,group_pic) => {
-  return Conversation.create({ type,name,group_pic});
+export const createConversationRepo = (type, data = {}, session) => {
+  return Conversation.create(
+    [{ type, ...data }],
+    { session }
+  ).then(res => res[0]);
 };
 
 /* Find by ID */
@@ -11,11 +14,11 @@ export const findConversationByIdRepo = (conversationId) => {
 };
 
 /* Update last message */
-export const updateLastMessageRepo = (conversationId, messageId) => {
+export const updateLastMessageRepo = (conversationId, messageId, session) => {
   return Conversation.findByIdAndUpdate(
     conversationId,
     { last_message_id: messageId },
-    { new: true }
+    { new: true, session }
   );
 };
 

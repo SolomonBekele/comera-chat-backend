@@ -4,9 +4,11 @@ import express from "express";
 import helmet from "helmet";
 import cors from "cors";
 import messageRoutes from "./routes/messageRoutes.js";
+import conversationRoutes from "./routes/conversationRoutes.js";
 import errorHandler from "./middleware/errorHandler.js";
 import i18n from './i18n/langConfig.js';
 import { authenticateRequest } from './middleware/authMiddleware.js';
+import connectToMongoDB from './repositories/mongo/config/configMongoDb.js';
 
 
 
@@ -32,13 +34,14 @@ app.use((req, res, next) => {
 
 
 app.use("/api/chat/message",authenticateRequest, messageRoutes);
-// app.use("/api/user/profile",protectRoute,userRoutes);
+app.use("/api/chat/conversation",authenticateRequest,conversationRoutes);
 
 
 //error handler
 app.use(errorHandler);
 
 app.listen(PORT, () => {
+  connectToMongoDB()
   logger.info(`Chat service running on port ${PORT}`);
 });
 

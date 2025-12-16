@@ -8,13 +8,13 @@ import {
 import logger from "../utils/logger.js";
 import i18n from "../i18n/langConfig.js";
 
+
 export const createConversationService = async (
   type,
-  name = null,
-  group_pic = null
+  data,
+  session
 ) => {
-  const conversation = await createConversationRepo(type, name, group_pic);
-
+  const conversation = await createConversationRepo(type, data, session);
   if (!conversation) {
     logger.error("Failed to create conversation");
     throw new Error(i18n.__("CONVERSATION.CREATE_FAILED"));
@@ -23,6 +23,7 @@ export const createConversationService = async (
   logger.info(`Conversation created: id=${conversation._id}`);
   return conversation;
 };
+
 
 export const getConversationByIdService = async (id) => {
   const conversation = await findConversationByIdRepo(id);
@@ -46,10 +47,11 @@ export const getConversationsByIdsService = async (ids) => {
   return conversations;
 };
 
-export const updateLastMessageService = async (conversationId, messageId) => {
+export const updateLastMessageService = async (conversationId, messageId,session) => {
   const updatedConversation = await updateLastMessageRepo(
     conversationId,
-    messageId
+    messageId,
+    session
   );
 
   if (!updatedConversation) {
