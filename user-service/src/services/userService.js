@@ -1,5 +1,5 @@
 import {
-    findByEmailRepo,
+  findByEmailRepo,
   findByIdRepo,
   findByPhoneRepo,
   getAllUsersRepo,

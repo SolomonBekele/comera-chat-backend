@@ -94,19 +94,24 @@ services:
     restart: always
     ports:
       - "27017:27017"
+    command: >
+      mongod
+      --auth
+      --replSet rs0
+      --keyFile /etc/mongo-keyfile/mongo-keyfile
+      --bind_ip_all
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root123
       MONGO_INITDB_DATABASE: chat-db
     volumes:
       - mongo-data:/data/db
-    healthcheck:
-      test: ["CMD-SHELL", "mongosh --eval 'db.runCommand({ ping: 1 })'"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - ./chat-service/src/repositories/mongo/mongo-keyfile:/etc/mongo-keyfile:ro
     networks:
       - backend-net
+
+
+
 
   # ===============================
   # MYSQL

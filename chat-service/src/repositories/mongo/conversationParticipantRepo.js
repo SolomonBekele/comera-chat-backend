@@ -15,15 +15,27 @@ export const addParticipantRepo = ({
 };  
 
 /* Add multiple users */
-export const addParticipantsRepo = (conversationId, users = []) => {
+export const addParticipantsRepo = (conversationId, users=[], session) => {
   return ConversationParticipant.insertMany(
-    users.map((u) => ({
+    users.map(u => ({
       conversation_id: conversationId,
       user_id: u.userId,
       role: u.role || "member",
-    }))
+    })),
+    { session }
   );
 };
+
+export const getOtherUserIdByConversationIdAndUserIdRepo = async (conversationId, userId) => {
+  const participants = await ConversationParticipant.find({
+    conversation_id: conversationId,
+    user_id: { $ne: userId }, // exclude current user
+  }).select("user_id -_id").lean();
+
+  // Return array of user IDs
+  return participants.map(p => p.user_id.toString());
+};
+
 
 /* Get participants by conversation */
 export const getParticipantsByConversationIdRepo = (conversationId) => {
@@ -33,11 +45,35 @@ export const getParticipantsByConversationIdRepo = (conversationId) => {
 };
 
 /* Get conversations for user (chat list) */
-export const getUserConversationsRepo = (userId) => {
+export const getUserConversationsByUserIdRepo = (userId) => {
   return ConversationParticipant.find({ user_id: userId })
     .select("conversation_id role joined_at last_read_message_id")
     .lean();
 };
+export const getUserConversationsByUserIdAndTypeRepo = async (userId, type) => {
+  const results = await ConversationParticipant.find({ user_id: userId })
+    .select("conversation_id role joined_at last_read_message_id")
+    .populate({
+      path: "conversation_id",
+      select: "name type group_pic last_message_id created_at updated_at",
+    })
+    .lean();
+
+  return results
+    .filter(p => p.conversation_id !== null && p.conversation_id.type === type)
+    .map(p => {
+        // Rename key
+      p.conversation = p.conversation_id;
+      delete p.conversation_id;
+      // If not group, remove group_pic and name
+      if (p.conversation.type !== "group") {
+        delete p.conversation.group_pic;
+        delete p.conversation.name;
+      }
+      return p;
+    });
+};
+
 
 /* Update last read message */
 export const updateLastReadMessageRepo = ({

@@ -1,15 +1,15 @@
 import {
-  sendMessageRepo,
   getMessagesByConversationRepo,
   softDeleteMessageRepo,
   countUnreadMessagesRepo,
+  createMessageRepo,
 } from "../repositories/mongo/messageRepo.js";
 
 import logger from "../utils/logger.js";
 import i18n from "../i18n/langConfig.js";
 
-export const sendMessageService = async (payload) => {
-  const message = await sendMessageRepo(payload);
+export const creatMessageService = async (payload,session) => {
+  const message = await createMessageRepo(payload,session);
 
   if (!message) {
     logger.error("Failed to send message");

@@ -11,8 +11,8 @@ export const authenticateRequest = (req, res, next) => {
       message: "Authencation required! Please login to continue",
     });
   }
-
-  req.userId = { userId };
+ 
+  req.userId = userId;
   next();
 };
 
