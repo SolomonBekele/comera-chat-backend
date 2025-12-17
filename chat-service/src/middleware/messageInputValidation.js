@@ -1,6 +1,6 @@
 import Joi from "joi";
 const sendMessageScheme = Joi.object({
-  conversation_id: Joi.number().min(10),
+  conversationId: Joi.string().min(10),
   receiverId: Joi.string().required(),
   content:Joi.string().required(),
   type: Joi.string().min(3).required(),

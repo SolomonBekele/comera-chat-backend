@@ -3,6 +3,7 @@ import {
   softDeleteMessageRepo,
   countUnreadMessagesRepo,
   createMessageRepo,
+  getLastMessageRepo,
 } from "../repositories/mongo/messageRepo.js";
 
 import logger from "../utils/logger.js";
@@ -28,6 +29,14 @@ export const getMessagesService = async (params) => {
   }
 
   return messages;
+};
+export const getLastMessageService = async (conversation_id) => {
+  const message = await getLastMessageRepo(conversation_id);
+
+  if (!message) {
+    throw new Error(i18n.__("MESSAGE.NOT_FOUND"));
+  }
+  return {content:message.content,type:message.type,sentAt:message.sent_at};
 };
 
 export const deleteMessageService = async (messageId) => {

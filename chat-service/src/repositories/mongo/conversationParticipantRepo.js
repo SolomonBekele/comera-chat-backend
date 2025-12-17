@@ -60,18 +60,7 @@ export const getUserConversationsByUserIdAndTypeRepo = async (userId, type) => {
     .lean();
 
   return results
-    .filter(p => p.conversation_id !== null && p.conversation_id.type === type)
-    .map(p => {
-        // Rename key
-      p.conversation = p.conversation_id;
-      delete p.conversation_id;
-      // If not group, remove group_pic and name
-      if (p.conversation.type !== "group") {
-        delete p.conversation.group_pic;
-        delete p.conversation.name;
-      }
-      return p;
-    });
+    
 };
 
 

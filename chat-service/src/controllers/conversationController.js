@@ -1,10 +1,12 @@
 import { Conversation } from "../repositories/mongo/models/conversationModel.js";
 import { getOtherUserIdByConversationIdAndUserIdService, getUserConversationsByUserIdAndTypeService, getUserConversationsByUserIdService } from "../services/conversationPartService.js";
 import { fetchUserFromUserService } from "../services/userService.js";
+import logger from "../utils/logger.js";
 
 
 export const getConversationList = async (req, res) => {
   try {
+    logger.info("get conversation list endpoint hit ....")
     const userId = req.userId;
 
     // Check user existence
@@ -16,7 +18,7 @@ export const getConversationList = async (req, res) => {
     // Fetch peer users for each conversation
     for (const conversation of conversations) {
       const peerUserIds = await getOtherUserIdByConversationIdAndUserIdService(
-        conversation.conversation._id,
+        conversation.conversationInfo._id,
         userId
       );
 

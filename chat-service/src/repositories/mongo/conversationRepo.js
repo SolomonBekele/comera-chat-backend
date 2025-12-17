@@ -17,7 +17,7 @@ export const findConversationByIdRepo = (conversationId) => {
 export const updateLastMessageRepo = (conversationId, messageId, session) => {
   return Conversation.findByIdAndUpdate(
     conversationId,
-    { last_message_id: messageId },
+    { last_message_id: messageId},
     { new: true, session }
   );
 };
