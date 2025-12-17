@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Message } from "./models/messageModel.js";
 
 /* Send message */
@@ -15,7 +16,7 @@ export const getMessageByIdRepo = (messageId) => {
 };
 
 /* Get messages with pagination */
-export const getMessagesByConversationRepo = ({
+export const getMessagesByConversationWithPaginationRepo = ({
   conversationId,
   limit = 20,
   before,
@@ -31,6 +32,16 @@ export const getMessagesByConversationRepo = ({
 
   return Message.find(query).sort({ _id: -1 }).limit(limit).lean();
 };
+
+export const getMessagesByConversationRepo = (conversationId) => {
+  return Message.find({
+    conversation_id: conversationId,
+    deleted: false,
+  })
+    .sort({ _id: 1 }) // ✅ oldest → newest
+    .lean();
+};
+
 
 /* Mark delivered */
 export const markMessageDeliveredRepo = (messageId) => {
@@ -66,19 +77,20 @@ export const getLastMessageRepo = (conversationId) => {
 };
 
 /* Count unread messages */
-export const countUnreadMessagesRepo = ({
-  conversationId,
-  lastReadMessageId,
-  userId,
-}) => {
+export const countUnreadMessagesRepo = ({ conversationId, lastReadMessageId, userId }) => {
   const query = {
-    conversation_id: conversationId,
-    sender_id: { $ne: userId },
+    conversation_id: new mongoose.Types.ObjectId(conversationId),
     deleted: false,
   };
 
+  // sender_id type handling
+  // If stored as ObjectId in DB
+  // query.sender_id = { $ne: new mongoose.Types.ObjectId(userId) };
+  // If stored as string (UUID)
+  query.sender_id = { $ne: userId };
+
   if (lastReadMessageId) {
-    query._id = { $gt: lastReadMessageId };
+    query._id = { $gt: new mongoose.Types.ObjectId(lastReadMessageId) };
   }
 
   return Message.countDocuments(query);

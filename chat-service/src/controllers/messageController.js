@@ -1,7 +1,9 @@
 import {  addParticipantsService } from "../services/conversationPartService.js";
 import { createConversationService, updateLastMessageService } from "../services/conversationService.js";
-import { creatMessageService } from "../services/messageService.js";
+import { creatMessageService, getMessagesService } from "../services/messageService.js";
 import mongoose from "mongoose";
+import logger from "../utils/logger.js";
+import i18n from "../i18n/langConfig.js";
 
 export const sendMessage = async (req, res) => {
   const session = await mongoose.startSession();
@@ -69,5 +71,39 @@ export const sendMessage = async (req, res) => {
     });
   }
 };
+
+
+export const getAllMessages = async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+
+    if (!conversationId) {
+      return res.status(400).json({
+        success: false,
+        message: i18n.__("CONVERSATION.ID_REQUIRED"),
+      });
+    }
+
+    const messages = await getMessagesService(conversationId);
+
+    return res.status(200).json({
+      success: true,
+      message: i18n.__("MESSAGE.RETRIEVED"),
+      data: messages,
+    });
+
+  } catch (err) {
+    logger.error("Error fetching messages", {
+      message: err.message,
+      stack: err.stack,
+    });
+
+    return res.status(404).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 
 

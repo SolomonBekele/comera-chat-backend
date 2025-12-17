@@ -7,6 +7,7 @@ import {
 } from "../services/userService.js";
 import i18n from "../i18n/langConfig.js";
 import logger from "../utils/logger.js";
+import { formatLastSeen } from "../../../common/util/formatTime.js";
 
 
 export const getUserbyId = async (req, res) => {
@@ -41,7 +42,7 @@ export const getAllUsers = async (req, res) => {
     logger.error("Error fetching all users", { message: err.message, stack: err.stack });
         res.status(500).json({
             success: false,
-            message: error.message,
+            message: err.message,
         });
   }
 };
@@ -107,3 +108,31 @@ export const getProfilePic = async (req,res,next) =>{
   }
 }
 
+export const getAllContact = async (req, res) => {
+  logger.info("get all contact  endpoint hit...");
+  try {
+    const users = await getAllUsersService();
+    users.sort((a, b) => {
+      const aTime = new Date(a.last_seen || 0).getTime();
+      const bTime = new Date(b.last_seen || 0).getTime();
+      return bTime - aTime; // newest first
+    });
+    
+    users.forEach(user => {
+      user.last_seen = formatLastSeen(user.last_seen)
+    });
+
+    res.json({
+         success: true, 
+         message: i18n.__("USER.RETRIEVED_ALL",{count:users.length}),
+          users 
+        });
+
+  } catch (err) {
+    logger.error("Error fetching all users", { message: err.message, stack: err.stack });
+        res.status(500).json({
+            success: false,
+            message: err.message,
+        });
+  }
+};

@@ -54,7 +54,7 @@ const messageSchema = new mongoose.Schema(
   {
     timestamps: {
       createdAt: "sent_at",
-      updatedAt: false,
+      updatedAt: "updated_at",
     },
   }
 );

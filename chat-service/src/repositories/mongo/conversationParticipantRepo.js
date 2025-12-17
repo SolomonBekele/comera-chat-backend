@@ -60,18 +60,7 @@ export const getUserConversationsByUserIdAndTypeRepo = async (userId, type) => {
     .lean();
 
   return results
-    .filter(p => p.conversation_id !== null && p.conversation_id.type === type)
-    .map(p => {
-        // Rename key
-      p.conversation = p.conversation_id;
-      delete p.conversation_id;
-      // If not group, remove group_pic and name
-      if (p.conversation.type !== "group") {
-        delete p.conversation.group_pic;
-        delete p.conversation.name;
-      }
-      return p;
-    });
+    
 };
 
 
@@ -116,3 +105,64 @@ export const isParticipantRepo = (conversationId, userId) => {
     user_id: userId,
   });
 };
+
+export const getConversationIdByTwoUsersRepo = async (
+  userId1,
+  userId2
+) => {
+  const participants = await ConversationParticipant.aggregate([
+    {
+      $match: {
+        user_id: { $in: [userId1, userId2] },
+      },
+    },
+    {
+      $group: {
+        _id: "$conversation_id",
+        users: { $addToSet: "$user_id" },
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $match: {
+        count: 2, // both users exist in same conversation
+      },
+    },
+    {
+      $lookup: {
+        from: "conversations",
+        localField: "_id",
+        foreignField: "_id",
+        as: "conversation",
+      },
+    },
+    {
+      $unwind: "$conversation",
+    },
+    {
+      $match: {
+        "conversation.type": "one-to-one",
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+      },
+    },
+  ]);
+
+  return participants.length > 0 ? participants[0]._id : null;
+};
+
+export const getConversationParticipantByUserAndConversationRepo = (
+  userId,
+  conversationId
+) => {
+  return ConversationParticipant.findOne({
+    user_id: userId,
+    conversation_id: conversationId,
+  })
+    .populate("conversation_id")
+    .lean();
+};
+
