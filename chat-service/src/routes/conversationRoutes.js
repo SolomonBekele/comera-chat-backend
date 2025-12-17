@@ -1,9 +1,10 @@
 import express from "express"
-import { getConversationList } from "../controllers/conversationController.js";
+import { getConversationByTwoUsers, getConversationList } from "../controllers/conversationController.js";
 
 
 
 const router = express.Router();
-router.get("/", getConversationList);
+router.get("/all", getConversationList);
+router.get("/user/:otherUserId", getConversationByTwoUsers);
 
 export default router;

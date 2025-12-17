@@ -7,12 +7,15 @@ import {
   removeParticipantRepo,
   getUserConversationsByUserIdAndTypeRepo,
   getOtherUserIdByConversationIdAndUserIdRepo,
+  getConversationIdByTwoUsersRepo,
+  getConversationParticipantByUserAndConversationRepo
 } from "../repositories/mongo/conversationParticipantRepo.js";
 
 import logger from "../utils/logger.js";
 import i18n from "../i18n/langConfig.js";
 import { getLastMessageService, getUnreadCountService,  } from "./messageService.js";
 import { formatTimeAgo } from "../../../common/util/formatTime.js";
+import { getConversationByIdService } from "./conversationService.js";
 
 export const addParticipantService = async (data) => {
   const participant = await addParticipantRepo(data);
@@ -150,4 +153,85 @@ export const leaveConversationService = async (conversationId, userId) => {
 
   logger.info(`User left conversation: user=${userId}, conversation=${conversationId}`);
   return removed;
+};
+export const getConversationIdByTwoUsersService = async (
+  userId1,
+  userId2
+) => {
+  const conversationId =
+    await getConversationIdByTwoUsersRepo(userId1, userId2);
+
+  if (!conversationId) {
+    throw new Error(i18n.__("CONVERSATION.NOT_FOUND"));
+  }
+
+  return conversationId;
+};
+
+export const getUserConversationByTwoUserIdAndTypeService = async (
+  userId1,
+  userId2,
+  type
+) => {
+  // ✅ get common conversation id
+  const conversationId = await getConversationIdByTwoUsersRepo(
+    userId1,
+    userId2
+  );
+   
+
+  if (!conversationId) {
+    return {
+    conversationInfo:null
+  };
+  }
+
+  // ✅ get participant of current user in THIS conversation
+  const participant = await getConversationParticipantByUserAndConversationRepo(
+    userId1,
+    conversationId
+  );
+  if (!participant || !participant.conversation_id) {
+    throw new Error(i18n.__("CONVERSATION.NOT_FOUND"));
+  }
+
+  const conversationInfo = participant.conversation_id;
+
+  if (conversationInfo.type !== type) {
+    throw new Error(i18n.__("CONVERSATION.NOT_FOUND"));
+  }
+
+  // ✅ unread count
+  const unreadMessage = await getUnreadCountService({
+    conversationId: conversationInfo._id,
+    lastReadMessageId: participant.last_read_message_id,
+    userId: userId1,
+  });
+
+  // ✅ last message
+  const lastMessage = await getLastMessageService(conversationInfo._id);
+
+  // ✅ response
+  return {
+    id: participant._id,
+    role: participant.role,
+    joined_at: participant.joined_at,
+    last_read_message_id: participant.last_read_message_id,
+    unreadMessage,
+    conversationInfo: {
+      _id: conversationInfo._id,
+      type: conversationInfo.type,
+      created_at: conversationInfo.created_at,
+      updated_at: conversationInfo.updated_at,
+      lastMessage: lastMessage?.content || null,
+      lastMessageType: lastMessage?.type || null,
+      lastMessageTime: formatTimeAgo(lastMessage?.sent_at),
+      ...(conversationInfo.type === "group"
+        ? {
+            name: conversationInfo.name,
+            group_pic: conversationInfo.group_pic,
+          }
+        : {}),
+    },
+  };
 };
