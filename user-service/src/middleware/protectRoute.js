@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import redisClient from "../../../common/config/redisClient.js";
+import redisClient from "../../../common/src/config/redisClient.js";
 
 
 import i18n from "../i18n/langConfig.js";

@@ -7,7 +7,7 @@ import {
 } from "../services/userService.js";
 import i18n from "../i18n/langConfig.js";
 import logger from "../utils/logger.js";
-import { formatLastSeen } from "../../../common/util/formatTime.js";
+import { formatLastSeen } from "../../../common/src/util/formatTime.js";
 
 
 export const getUserbyId = async (req, res) => {

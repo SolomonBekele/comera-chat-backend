@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import {minioClient}  from "../../../common/config/minioClient.js";
+import {minioClient}  from "../../../common/src/config/minioClient.js";
 
 const BUCKET_NAME = "user-profile-pic";
 

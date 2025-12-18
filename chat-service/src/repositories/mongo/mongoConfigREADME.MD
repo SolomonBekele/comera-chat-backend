@@ -43,6 +43,13 @@ networks:
 ````
 
 ---
+# MongoDB Replica Set Setup (Manual Initialization)
+
+## 1. Create Keyfile
+```bash
+cd repositories/mongo
+openssl rand -base64 756 > mongo-keyfile
+chmod 400 mongo-keyfile
 
 ## 2. Start MongoDB Container
 

@@ -1,4 +1,4 @@
-import redisClient from "../../../common/config/redisClient.js"; 
+import redisClient from "../../../common/src/config/redisClient.js"; 
 
 export const storeUserToken = async (userId, token) => {
   // Store token with key as userId

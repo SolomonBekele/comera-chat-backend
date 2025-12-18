@@ -1,5 +1,5 @@
 import { RateLimiterRedis } from "rate-limiter-flexible";
-import redisClient from "../../../common/config/redisClient.js"
+import redisClient from "../../../common/src/config/redisClient.js"
 
 /**
  * Two-layer gateway limiter:

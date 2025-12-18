@@ -9,11 +9,9 @@ import errorHandler from "./middleware/errorHandler.js";
 import i18n from './i18n/langConfig.js';
 import { authenticateRequest } from './middleware/authMiddleware.js';
 import connectToMongoDB from './repositories/mongo/config/configMongoDb.js';
+import { app,server } from '../../common/src/socket/socket.js';
 
 
-
-
-const app = express();
 const PORT = process.env.PORT ;
 
 
@@ -40,7 +38,7 @@ app.use("/api/chat/conversation",authenticateRequest,conversationRoutes);
 //error handler
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   connectToMongoDB()
   logger.info(`Chat service running on port ${PORT}`);
 });

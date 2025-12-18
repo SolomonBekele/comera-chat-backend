@@ -4,6 +4,7 @@ import { creatMessageService, getMessagesService } from "../services/messageServ
 import mongoose from "mongoose";
 import logger from "../utils/logger.js";
 import i18n from "../i18n/langConfig.js";
+import { getReceiverSocketId, io } from "../../../common/src/socket/socket.js";
 
 export const sendMessage = async (req, res) => {
   const session = await mongoose.startSession();
@@ -54,6 +55,12 @@ export const sendMessage = async (req, res) => {
 
     await session.commitTransaction();
     session.endSession();
+
+    const receiverSocketId = await getReceiverSocketId(receiverId);
+    if(receiverSocketId){
+      io.to(receiverSocketId).emit("newMessage",{conversationId,message})
+  
+    }
 
     res.json({
       success: true,

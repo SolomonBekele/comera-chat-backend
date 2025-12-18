@@ -10,7 +10,7 @@ import i18n from "../i18n/langConfig.js";
 import bcrypt from "bcrypt";
 import { penalizeLogin, resetLogin } from "../middleware/loginLimiter.js";
 import { generateAccessToken,generateRefreshToken,verifyToken } from "../utils/generateTokens.js";
-import redisClient from "../../../common/config/redisClient.js";
+import redisClient from "../../../common/src/config/redisClient.js";
 
 
 export const signupUserService = async (data) => {
