@@ -14,7 +14,7 @@ import {
 import logger from "../utils/logger.js";
 import i18n from "../i18n/langConfig.js";
 import { getLastMessageService, getUnreadCountService,  } from "./messageService.js";
-import { formatTimeAgo } from "../../../common/util/formatTime.js";
+import { formatTimeAgo } from "../../../common/src/util/formatTime.js";
 import { getConversationByIdService } from "./conversationService.js";
 
 export const addParticipantService = async (data) => {
@@ -77,7 +77,7 @@ export const getUserConversationsByUserIdAndTypeService = async (userId, type) =
   const conversations =await getUserConversationsByUserIdAndTypeRepo(userId, type);
 
   if (!conversations || conversations.length === 0) {
-    throw new Error(i18n.__("CONVERSATION.NOT_FOUND"));
+    return []
   }
   const filteredConversations = await Promise.all(
     conversations

@@ -13,6 +13,12 @@ export const getConversationList = async (req, res) => {
     // Check user existence
     // Fetch conversations of type 'one-to-one'
     const conversations = await getUserConversationsByUserIdAndTypeService(userId, "one-to-one");
+    if(conversations.length === 0){
+      res.status(200).json({
+      success: true,
+      data: conversations,
+    });
+    }
 
     // Fetch peer users for each conversation
     for (const conversation of conversations) {

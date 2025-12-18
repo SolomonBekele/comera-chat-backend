@@ -11,8 +11,6 @@ import { gatewayRateMiddleware } from './src/middleware/gatewayLimiter.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-
-
 app.use(helmet());
 app.use(cors());
 app.use((req, res, next) => {
@@ -162,12 +160,12 @@ app.use(errorHandler);
 
 app.listen(PORT, () => {
   logger.info(`API Gateway is running on port ${PORT}`);
-  // logger.info(
-  //   `user service is running on port ${process.env.USER_SERVICE_URL}`
-  // );
-  // logger.info(
-  //   `chat service is running on port ${process.env.CHAT_SERVICE_URL}`
-  // );
+  logger.info(
+    `user service is running on port ${process.env.USER_SERVICE_URL}`
+  );
+  logger.info(
+    `chat service is running on port ${process.env.CHAT_SERVICE_URL}`
+  );
   // logger.info(
   //   `media service is running on port ${process.env.MEDIA_SERVICE_URL}`
   // );
