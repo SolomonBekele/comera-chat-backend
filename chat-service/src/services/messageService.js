@@ -4,6 +4,7 @@ import {
   countUnreadMessagesRepo,
   createMessageRepo,
   getLastMessageRepo,
+  markMessageDeliveredByConversationIdRepo
 } from "../repositories/mongo/messageRepo.js";
 
 import logger from "../utils/logger.js";
@@ -58,4 +59,14 @@ export const getUnreadCountService = async (data) => {
   }
 
   return count;
+};
+
+export const markMessageDeliveredByConversationIdService = async (params) => {
+  const messages = await markMessageDeliveredByConversationIdRepo(conversationId);
+
+  if (!messages) {
+    throw new Error(i18n.__("MESSAGE.NOT_FOUND"));
+  }
+
+  return true;
 };

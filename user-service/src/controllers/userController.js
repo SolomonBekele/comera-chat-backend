@@ -94,8 +94,9 @@ export const updateProfilePic = async (req,res,next) =>{
 }
 export const getProfilePic = async (req,res,next) =>{
     try{
-        
-        const fileName = req.user.profile_picture;
+      const {userId} = req.params
+        const user = await getUserByIdService(userId);
+        const fileName = user.profile_picture;
         const imageUrl = await getProfilePicService(fileName);
         res.json({
          success: true, 

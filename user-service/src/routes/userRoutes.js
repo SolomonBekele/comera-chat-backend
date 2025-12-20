@@ -13,6 +13,6 @@ router.get('/contact',getAllContact)
 router.put('/',updateUser)
 router.get('/self/token', getUserByToken);
 router.put("/profile/change-profile-pic",upload.single('profilePic'),validateProfilePicUpdate,updateProfilePic)
-router.get("/profile/pic",getProfilePic)
+router.get("/profile/pic/:userId",getProfilePic)
 
 export default router;

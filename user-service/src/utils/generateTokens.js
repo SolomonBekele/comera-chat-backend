@@ -4,7 +4,7 @@ import { storeUserToken } from "./storeToken.js";
 
 export const  generateAccessToken = async (userId,language) => {
   const token = jwt.sign({ userId,language }, process.env.JWT_SECRET, {
-    expiresIn: "15m",
+    expiresIn: "30m",
   });
   await storeUserToken(userId,token);
   return token;

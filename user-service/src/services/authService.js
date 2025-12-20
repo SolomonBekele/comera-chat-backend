@@ -2,7 +2,8 @@ import {
   findByEmailRepo,
   findByIdRepo,
   createUserRepo,
-  findByPhoneRepo
+  findByPhoneRepo,
+  updatelastSeenRepo
 } from "../repositories/sequelize/userRepository.js";
 import logger from "../utils/logger.js";
 import { v4 as uuidv4 } from 'uuid';
@@ -76,6 +77,7 @@ export const refreshUserTokenService = async (refreshToken) => {
 };
 
 export const logoutUserService = async (userId) => {
+   await updatelastSeenRepo(userId);
    await redisClient.del(userId);
   return true;
 };

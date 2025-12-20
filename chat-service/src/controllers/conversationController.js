@@ -1,6 +1,11 @@
 import { Conversation } from "../repositories/mongo/models/conversationModel.js";
-import { getConversationIdByTwoUsersService, getOtherUserIdByConversationIdAndUserIdService, getUserConversationsByUserIdAndTypeService, getUserConversationByTwoUserIdAndTypeService } from "../services/conversationPartService.js";
+import { getConversationIdByTwoUsersService, 
+  getOtherUserIdByConversationIdAndUserIdService, 
+  getUserConversationsByUserIdAndTypeService,
+  getUserConversationsByUserIdService, 
+  getUserConversationByTwoUserIdAndTypeService } from "../services/conversationPartService.js";
 import { getConversationByIdService } from "../services/conversationService.js";
+import { markMessageDeliveredByConversationIdService } from "../services/messageService.js";
 import { fetchUserFromUserService } from "../services/userService.js";
 import logger from "../utils/logger.js";
 
@@ -38,6 +43,7 @@ export const getConversationList = async (req, res) => {
 
     res.status(200).json({
       success: true,
+      message: "fetched conversations successfully",
       data: conversations,
     });
   } catch (error) {
@@ -82,3 +88,18 @@ export const getConversationByTwoUsers = async (req, res) => {
   }
 };
 
+export const markMessageDelivered= async(req,res)=>{
+  try {
+    const userId1 = req.userId; // current user
+    
+    const conversations = await getUserConversationsByUserIdService(userId1);
+    for(const conversation of conversations){
+      await markMessageDeliveredByConversationIdService(conversation.id)
+    }
+    }catch (err) {
+    return res.status(404).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
