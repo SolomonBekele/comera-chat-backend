@@ -53,3 +53,9 @@ export const updateProfilePicRepo = async (id,fileName) => {
   user.profile_picture = fileName;
   await user.save();
 };
+export const updatelastSeenRepo = async (id) => {
+  const user = await User.findByPk(id);
+  if (!user) return null;
+  user.last_seen = new Date();
+  await user.save();
+};

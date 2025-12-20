@@ -11,6 +11,7 @@ import {
   getOnlineUsers,
 } from "./socketStore.js";
 import { socketAuthMiddleware } from "./socketAuth.js";
+// import { sendMessageSocket } from "../../../chat-service/src/controllers/messageController.js";
 const app = express();
 const server = http.createServer(app);
 
@@ -46,6 +47,16 @@ io.on("connection", async (socket) => {
 
   // 🔔 Notify online users
   io.emit("getOnlineUsers", await getOnlineUsers());
+
+  socket.on("message:send", async (conversationId,receiverId,message,type) => {
+    
+    const newMessage = await sendMessageSocket({userId,receiverId,conversationId,message,type})
+    console.log(newMessage);
+    const receiverSocket = await getUserSocket(receiverId);
+    if (receiverSocket) {
+      io.to(receiverSocket).emit("message:new", newMessage)
+    }
+  });
 
   // ⌨️ Typing indicator
   socket.on("typing:start", async ({ receiverId, conversationId }) => {

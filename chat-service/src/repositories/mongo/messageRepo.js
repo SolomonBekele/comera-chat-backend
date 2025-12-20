@@ -44,13 +44,21 @@ export const getMessagesByConversationRepo = (conversationId) => {
 
 
 /* Mark delivered */
-export const markMessageDeliveredRepo = (messageId) => {
+export const markMessageDeliveredByMessageIdRepo = (_id) => {
   return Message.findByIdAndUpdate(
-    messageId,
+    _id,
     { delivered_at: new Date() },
     { new: true }
   );
 };
+export const markMessageDeliveredByConversationIdRepo = (conversationId) => {
+  return Message.updateMany(
+    { conversationId, delivered_at: { $exists: false } },
+    { $set: { delivered_at: new Date() } }
+  );
+};
+
+
 
 /* Mark read */
 export const markMessageReadRepo = (messageId) => {

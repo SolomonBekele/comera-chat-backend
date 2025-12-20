@@ -6,14 +6,12 @@ import logger from "../utils/logger.js";
 import i18n from "../i18n/langConfig.js";
 import { getReceiverSocketId, io } from "../../../common/src/socket/socket.js";
 
-export const sendMessage = async (req, res) => {
+export const sendMessageSocket = async ({userId,receiverId,conversationId,content,type}) => {
   const session = await mongoose.startSession();
 
   try {
     session.startTransaction();
-    const senderId = req.userId;
-    const { receiverId, content, type } = req.body;
-    let conversationId = req.body.conversationId;
+    const senderId = userId;
 
     // 1️⃣ Create 1-1 conversation lazily
     if (!conversationId) {
@@ -58,7 +56,7 @@ export const sendMessage = async (req, res) => {
 
     const receiverSocketId = await getReceiverSocketId(receiverId);
     if(receiverSocketId){
-      io.to(receiverSocketId).emit("newMessage",{conversationId,message})
+      io.to(receiverSocketId).emit("message:new",{conversationId,message})
   
     }
 
@@ -113,4 +111,75 @@ export const getAllMessages = async (req, res) => {
 };
 
 
+export const sendMessage = async (req, res) => {
+  const session = await mongoose.startSession();
 
+  try {
+    session.startTransaction();
+    const senderId = req.userId;
+    const { receiverId, content, type } = req.body;
+    let conversationId = req.body.conversationId;
+
+    // 1️⃣ Create 1-1 conversation lazily
+    if (!conversationId) {
+      const conversation = await createConversationService(
+        "one-to-one",
+        {},
+        session
+      );
+
+      await addParticipantsService(
+        conversation._id,
+        [
+          { userId: senderId },
+          { userId: receiverId },
+        ],
+        session
+      );
+
+      conversationId = conversation._id;
+    }
+
+    // 2️⃣ Send message
+    const message = await creatMessageService(
+      {
+        conversation_id: conversationId,
+        sender_id: senderId,
+        content,
+        type,
+      },
+      session
+    );
+
+    // 3️⃣ Update last message
+    await updateLastMessageService(
+      conversationId,
+      message._id,
+      session
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+
+    const receiverSocketId = await getReceiverSocketId(receiverId);
+    if(receiverSocketId){
+      io.to(receiverSocketId).emit("message:new",{conversationId,message})
+  
+    }
+
+    res.json({
+      success: true,
+      conversationId,
+      message,
+    });
+
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
