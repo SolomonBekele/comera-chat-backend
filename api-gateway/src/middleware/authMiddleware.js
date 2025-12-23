@@ -24,6 +24,7 @@ export const validateToken = async (req, res, next) => {
         },
       }
     );
+  
     if(!response?.data?.user || response?.data?.response) throw new Error("Authentication required")
     req.user = response.data.user;
     next();

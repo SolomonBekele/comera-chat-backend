@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import "dotenv/config"
-import redisClient from "../config/redisClient.js";
+import redisClient from "../../../../common/src/config/redisClient.js";
 
 export const socketAuthMiddleware = async (socket, next) => {
   try {

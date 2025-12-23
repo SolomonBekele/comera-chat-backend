@@ -1,4 +1,4 @@
-import redisClient from "../config/redisClient.js";
+import redisClient from "../../../common/src/config/redisClient.js";
 
 const ONLINE_USERS_KEY = "online_users";
 

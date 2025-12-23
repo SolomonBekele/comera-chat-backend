@@ -4,13 +4,21 @@ import { creatMessageService, getMessagesService } from "../services/messageServ
 import mongoose from "mongoose";
 import logger from "../utils/logger.js";
 import i18n from "../i18n/langConfig.js";
-import { getReceiverSocketId, io } from "../../../common/src/socket/socket.js";
+import { io } from "../socket/config/socketConfig.js";
+import { getReceiverSocketId } from "../socket/socketHelper.js";
 
-export const sendMessageSocket = async ({userId,receiverId,conversationId,content,type}) => {
+export const sendMessageSocket = async ({
+  userId,
+  receiverId,
+  conversationId,
+  content,
+  type,
+}) => {
   const session = await mongoose.startSession();
 
   try {
     session.startTransaction();
+
     const senderId = userId;
 
     // 1️⃣ Create 1-1 conversation lazily
@@ -33,7 +41,7 @@ export const sendMessageSocket = async ({userId,receiverId,conversationId,conten
       conversationId = conversation._id;
     }
 
-    // 2️⃣ Send message
+    // 2️⃣ Create message
     const message = await creatMessageService(
       {
         conversation_id: conversationId,
@@ -52,30 +60,22 @@ export const sendMessageSocket = async ({userId,receiverId,conversationId,conten
     );
 
     await session.commitTransaction();
-    session.endSession();
 
-    const receiverSocketId = await getReceiverSocketId(receiverId);
-    if(receiverSocketId){
-      io.to(receiverSocketId).emit("message:new",{conversationId,message})
-  
-    }
-
-    res.json({
-      success: true,
-      conversationId,
-      message,
-    });
+    return message ;
 
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
+    console.error("sendMessageSocket error:", error);
 
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    await session.abortTransaction();
+
+    // 🔴 IMPORTANT: rethrow so caller (socket) can handle it
+    throw error;
+
+  } finally {
+    session.endSession();
   }
 };
+
 
 
 export const getAllMessages = async (req, res) => {

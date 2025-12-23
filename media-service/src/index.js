@@ -3,15 +3,13 @@ import logger from "./utils/logger.js";
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
-import messageRoutes from "./routes/messageRoutes.js";
-import conversationRoutes from "./routes/conversationRoutes.js";
+import mediaRoutes from "./routes/mediaRoutes.js"
 import errorHandler from "./middleware/errorHandler.js";
 import i18n from './i18n/langConfig.js';
-import { authenticateRequest } from './middleware/authMiddleware.js';
-import connectToMongoDB from './repositories/mongo/config/configMongoDb.js';
-import { app,server } from './socket/config/socketConfig.js';
+import protectRoute from '../../user-service/src/middleware/protectRoute.js';
 
 
+const app = express();
 const PORT = process.env.PORT ;
 
 
@@ -27,20 +25,16 @@ app.use((req, res, next) => {
 });
 
 
+//Routes
+app.use("/api/media", protectRoute,mediaRoutes);
 
-
-
-
-app.use("/api/chat/message",authenticateRequest, messageRoutes);
-app.use("/api/chat/conversation",authenticateRequest,conversationRoutes);
 
 
 //error handler
 app.use(errorHandler);
 
-server.listen(PORT, () => {
-  connectToMongoDB()
-  logger.info(`Chat service running on port ${PORT}`);
+app.listen(PORT, () => {
+  logger.info(`Media service running on port ${PORT}`);
 });
 
 //unhandled promise rejection
