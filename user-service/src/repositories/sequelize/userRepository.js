@@ -47,10 +47,10 @@ export const updateUserRepo = async (id,phone_number,name,status) => {
   await user.save();
   return user.dataValues;
 };
-export const updateProfilePicRepo = async (id,fileName) => {
+export const updateProfilePicRepo = async (id,media_id) => {
   const user = await User.findByPk(id);
   if (!user) return null;
-  user.profile_picture = fileName;
+  user.profile_picture = media_id;
   await user.save();
 };
 export const updatelastSeenRepo = async (id) => {

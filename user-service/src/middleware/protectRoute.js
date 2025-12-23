@@ -21,6 +21,7 @@ const protectRoute = async (req, res, next) => {
     const storedToken = await redisClient.get(decoded.userId);
 
     if (!storedToken || storedToken !== token) {
+      logger.error("Invalid or expired token")
       return res.status(401).json({ message: "Invalid or expired token", success: false });
     }
   // additional

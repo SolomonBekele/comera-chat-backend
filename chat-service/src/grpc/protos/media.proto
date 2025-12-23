@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package media;
+
+service MediaService {
+  rpc uploadMedia(UploadMediaRequest) returns (UploadMediaResponse);
+  rpc updateMedia(UpdateMediaRequest) returns (UpdateMediaResponse);
+}
+
+message UploadMediaRequest {
+  bytes file = 1;
+  string filename = 2;
+  string filetype = 3;
+}
+
+message UploadMediaResponse {
+  string media_id = 1;
+}
+
+message UpdateMediaRequest {
+  string media_id = 1;
+  bytes file = 2;
+  string filename = 3;
+  string filetype = 4;
+}
+
+message UpdateMediaResponse {
+  string media_id = 1;
+}

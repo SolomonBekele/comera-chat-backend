@@ -99,7 +99,7 @@ export const getUserConversationsByUserIdAndTypeService = async (userId, type) =
 
         conversationInfo.lastMessage = lastMessage?.content || null;
         conversationInfo.lastMessageType = lastMessage?.type || null;
-        conversationInfo.lastMessageTime = formatTimeAgo(lastMessage?.sentAt)
+        conversationInfo.lastMessageTime = lastMessage?.sentAt
 
         // remove unwanted fields
         delete conversationInfo.last_message_id;

@@ -6,7 +6,7 @@ import { getConversationIdByTwoUsersService,
   getUserConversationByTwoUserIdAndTypeService } from "../services/conversationPartService.js";
 import { getConversationByIdService } from "../services/conversationService.js";
 import { markMessageDeliveredByConversationIdService } from "../services/messageService.js";
-import { fetchUserFromUserService } from "../services/userService.js";
+import { fetchUserFromUserService } from "../services/grpc/userService.js";
 import logger from "../utils/logger.js";
 
 

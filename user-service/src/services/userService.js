@@ -10,6 +10,7 @@ import logger from "../utils/logger.js";
 import { v4 as uuidv4 } from 'uuid';
 import i18n from "../i18n/langConfig.js";
 import { uploadProfilePic,getPresignedUrl } from "../utils/storageHandler.js";
+import { updateMediaToMediaService, uploadMediaToMediaService } from "./mediaService.js";
 
 export const getUserByIdService = async (id)=>{
   const user = await findByIdRepo(id);
@@ -50,16 +51,25 @@ export const updateUserService = async (id,data) => {
 };
 
 export const updateProfilePicService = async (id,file) => {
+ const user = await findByIdRepo(id);
 
-  const fileName = await uploadProfilePic(file.buffer,file.originalname)
+ let mediaId;
+  if (!user?.profile_picture){
+    const {media_id} = await uploadMediaToMediaService(file.buffer,file.originalname,file.mimetype, file.size )
+    mediaId = media_id
+  } 
+  else{
+    const {newMediaId} = await updateMediaToMediaService(user.profile_picture,file.buffer,file.originalname,file.mimetype,file.size)
+    mediaId = newMediaId
+  }
+
+  await updateProfilePicRepo(id,mediaId);
   
-  await updateProfilePicRepo(id,fileName);
-  
-  return fileName;
+  return mediaId;
 };
-export const getProfilePicService = async (fileName) => {
+export const getProfilePicService = async (mediaId) => {
   
-  const presigned = await getPresignedUrl(fileName)
+  const presigned = await getPresignedUrl(mediaId)
   
   
   return presigned;
